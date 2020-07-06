@@ -191,7 +191,6 @@ class Env():
             except:
                 pass
 
-        print(data)
         state, done = self.getState(data, past_action)
         reward, done = self.setReward(state, done)
 
