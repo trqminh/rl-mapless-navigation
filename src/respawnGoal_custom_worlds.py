@@ -29,12 +29,12 @@ class Respawn():
     def __init__(self):
         self.modelPath = os.path.dirname(os.path.realpath(__file__))
         self.modelPath = self.modelPath.replace('project/src',
-                                                'turtlebot3_simulations/turtlebot3_gazebo/models/turtlebot3_square/goal_box/model.sdf')
+                                                'project/model.sdf')
         self.f = open(self.modelPath, 'r')
         self.model = self.f.read()
         #stage 1 = TCC_world_obst
         #stage 2 = TCC_world_U
-        self.stage = rospy.get_param('/stage_number')
+        self.stage = 2 #rospy.get_param('/stage_number')
         self.goal_position = Pose()
         if self.stage == 1:  
             self.init_goal_x = 0.975166
@@ -52,7 +52,7 @@ class Respawn():
         self.last_goal_y = self.init_goal_y
         self.last_index = 0
         self.sub_model = rospy.Subscriber('gazebo/model_states', ModelStates, self.checkModel)
-        self.check_model = False
+        self.check_model = True
         self.index = 0
 
     def checkModel(self, model):

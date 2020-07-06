@@ -25,7 +25,7 @@ from geometry_msgs.msg import Twist, Point, Pose
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 from std_srvs.srv import Empty
-from tf.transformations import euler_from_quaternion, quaternion_from_euler
+#from tf.transformations import euler_from_quaternion, quaternion_from_euler
 world = True
 if world:
     from respawnGoal_custom_worlds import Respawn
@@ -71,8 +71,8 @@ class Env():
         self.past_position = copy.deepcopy(self.position)
         self.position = odom.pose.pose.position
         orientation = odom.pose.pose.orientation
-        orientation_list = [orientation.x, orientation.y, orientation.z, orientation.w]
-        _, _, yaw = euler_from_quaternion(orientation_list)
+        q_x, q_y, q_z, q_w = orientation.x, orientation.y, orientation.z, orientation.w
+        yaw = round(math.degrees(math.atan2(2 * (q_x * q_y + q_w * q_z), 1 - 2 * (q_y * q_y + q_z * q_z))))
 
         goal_angle = math.atan2(self.goal_y - self.position.y, self.goal_x - self.position.x)
 
@@ -191,6 +191,7 @@ class Env():
             except:
                 pass
 
+        print(data)
         state, done = self.getState(data, past_action)
         reward, done = self.setReward(state, done)
 
