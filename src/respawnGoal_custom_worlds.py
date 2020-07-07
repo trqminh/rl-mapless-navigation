@@ -52,7 +52,7 @@ class Respawn():
         self.last_goal_y = self.init_goal_y
         self.last_index = 0
         self.sub_model = rospy.Subscriber('gazebo/model_states', ModelStates, self.checkModel)
-        self.check_model = True
+        self.check_model = False
         self.index = 0
 
     def checkModel(self, model):
