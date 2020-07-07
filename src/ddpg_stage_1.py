@@ -19,10 +19,12 @@ import torch.nn as nn
 import math
 from collections import deque
 import copy
+from pathlib import Path
 
 
 #---Directory Path---#
 dirPath = os.path.dirname(os.path.realpath(__file__))
+Path('./figures/bl-env2/').mkdir(parents=True, exist_ok=True)
 #---Device---#
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 print('Device: ', device)
@@ -323,6 +325,10 @@ trainer = Trainer(STATE_DIMENSION, ACTION_DIMENSION, ACTION_V_MAX, ACTION_W_MAX,
 noise = OUNoise(ACTION_DIMENSION, max_sigma=0.1, min_sigma=0.1, decay_period=8000000)
 #trainer.load_models(4880)
 
+# write item down
+def write_to_csv(item, file_name):
+    with open(file_name, 'a') as f:
+        f.write("%s\n" % item)
 
 if __name__ == '__main__':
     rospy.init_node('ddpg_stage_1')
@@ -332,6 +338,7 @@ if __name__ == '__main__':
     before_training = 4
 
     past_action = np.zeros(ACTION_DIMENSION)
+    rets_his = []
 
     for ep in range(MAX_EPISODES):
         done = False
@@ -400,11 +407,12 @@ if __name__ == '__main__':
                 trainer.optimizer()
 
             if done or step == MAX_STEPS-1:
-                print('reward per ep: ' + str(rewards_current_episode))
+                print('reward per ep: {:.4f}'.format(rewards_current_episode))
                 print('*\nbreak step: ' + str(step) + '\n*')
                 # print('explore_v: ' + str(var_v) + ' and explore_w: ' + str(var_w))
                 print('sigma: ' + str(noise.sigma))
                 # rewards_all_episodes.append(rewards_current_episode)
+                rets_his.append(rewards_current_episode)
                 if not ep%10 == 0:
                     pass
                 else:
@@ -413,6 +421,8 @@ if __name__ == '__main__':
                     pub_result.publish(result)
                 break
         if ep%20 == 0:
+            write_to_csv(np.mean(rets_his), './figures/bl-env2/mean_ep_rets.csv')
+            rets_his = []
             trainer.save_models(ep)
 
     print('Completed Training')
