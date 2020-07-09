@@ -339,6 +339,7 @@ if __name__ == '__main__':
 
     past_action = np.zeros(ACTION_DIMENSION)
     rets_his = []
+    steps_his = []
 
     for ep in range(MAX_EPISODES):
         done = False
@@ -413,6 +414,7 @@ if __name__ == '__main__':
                 print('sigma: ' + str(noise.sigma))
                 # rewards_all_episodes.append(rewards_current_episode)
                 rets_his.append(rewards_current_episode)
+                steps_his.append(step)
                 if not ep%10 == 0:
                     pass
                 else:
@@ -422,7 +424,9 @@ if __name__ == '__main__':
                 break
         if ep%20 == 0:
             write_to_csv(np.mean(rets_his), './figures/bl-env2/mean_ep_rets.csv')
+            write_to_csv(np.mean(steps_his), './figures/bl-env2/mean_ep_steps.csv')
             rets_his = []
+            steps_his = []
             trainer.save_models(ep)
 
     print('Completed Training')
