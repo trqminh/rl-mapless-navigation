@@ -28,8 +28,8 @@ from geometry_msgs.msg import Pose
 class Respawn():
     def __init__(self):
         self.modelPath = os.path.dirname(os.path.realpath(__file__))
-        self.modelPath = self.modelPath.replace('project/src',
-                                                'project/model.sdf')
+        self.modelPath = self.modelPath.replace('mapless/src',
+                                                'mapless/model.sdf')
         self.f = open(self.modelPath, 'r')
         self.model = self.f.read()
         #stage 1 = TCC_world_obst
