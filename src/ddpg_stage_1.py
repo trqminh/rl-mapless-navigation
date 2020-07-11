@@ -5,14 +5,18 @@ import numpy as np
 import tensorflow as tf
 from ddpg import *
 from environment import Env
+from pathlib import Path
 
 exploration_decay_start_step = 50000
 state_dim = 16
 action_dim = 2
 action_linear_max = 0.25  # m/s
 action_angular_max = 0.5  # rad/s
-is_training = False
+is_training = True
 
+def write_to_csv(item, file_name):
+    with open(file_name, 'a') as f:
+        f.write("%s\n" % item)
 
 def main():
     rospy.init_node('ddpg_stage_1')
@@ -25,9 +29,18 @@ def main():
 
     if is_training:
         print('Training mode')
+        # path things
+        trained_models_path = './src/model/'
+        figures_path = './figures/bl-env2/'
+        Path(trained_models_path + 'actor').mkdir(parents=True, exist_ok=True)
+        Path(trained_models_path + 'critic').mkdir(parents=True, exist_ok=True)
+        Path(figures_path).mkdir(parents=True, exist_ok=True)
+
         avg_reward_his = []
         total_reward = 0
         var = 1.
+        ep_rets = []
+        ep_ret = 0.
 
         while True:
             state = env.reset()
@@ -48,6 +61,7 @@ def main():
 
                 if time_step > 0:
                     total_reward += r
+                    ep_ret += r
 
                 if time_step % 10000 == 0 and time_step > 0:
                     print('---------------------------------------------------')
@@ -56,6 +70,12 @@ def main():
                     avg_reward_his.append(round(avg_reward, 2))
                     print('Average Reward:',avg_reward_his)
                     total_reward = 0
+                    print('Mean episode return over training time step: {:.2f}'.format(np.mean(ep_rets)))
+                    print('Mean episode return over current 10k training time step: {:.2f}'.format(np.mean(ep_rets[-10:])))
+                    write_to_csv(np.mean(ep_rets), figures_path + 'mean_ep_ret_his.csv')
+                    write_to_csv(np.mean(ep_rets[-10:]), figures_path + 'mean_ep_ret_10k_his.csv')
+                    write_to_csv(avg_reward, figures_path + 'avg_reward_his.csv')
+                    print('---------------------------------------------------')
 
                 if time_step % 5 == 0 and time_step > exploration_decay_start_step:
                     var *= 0.9999
@@ -67,9 +87,15 @@ def main():
                 if arrive:
                     print('Step: %3i' % one_round_step, '| Var: %.2f' % var, '| Time step: %i' % time_step, '|', result)
                     one_round_step = 0
+                    if time_step > 0:
+                        ep_rets.append(ep_ret)
+                        ep_ret = 0.
 
                 if done or one_round_step >= 500:
                     print('Step: %3i' % one_round_step, '| Var: %.2f' % var, '| Time step: %i' % time_step, '|', result)
+                    if time_step > 0:
+                        ep_rets.append(ep_ret)
+                        ep_ret = 0.
                     break
 
     else:
