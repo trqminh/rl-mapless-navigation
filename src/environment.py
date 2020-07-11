@@ -13,9 +13,9 @@ from std_srvs.srv import Empty
 from gazebo_msgs.srv import SpawnModel, DeleteModel
 
 diagonal_dis = math.sqrt(2) * (3.6 + 3.8)
-goal_model_dir = os.path.join(os.path.split(os.path.realpath(__file__))[0], '..', '..', 'turtlebot3_simulations',
-                              'turtlebot3_gazebo', 'models', 'Target', 'model.sdf')
-
+#goal_model_dir = os.path.join(os.path.split(os.path.realpath(__file__))[0], '..', '..', 'turtlebot3_simulations',
+#                              'turtlebot3_gazebo', 'models', 'Target', 'model.sdf')
+goal_model_dir = './goal.sdf'
 
 class Env():
     def __init__(self, is_training):
