@@ -32,7 +32,9 @@ class Env():
         self.del_model = rospy.ServiceProxy('/gazebo/delete_model', DeleteModel)
         self.past_distance = 0.
         self.test_goals = [(0.,3.), (3.,1.), (0.,0.), (-2.,-1.), (-0.5, -3.2)]
-        if is_training:
+        self.test_goals_id = 0
+        self.is_training = is_training
+        if self.is_training:
             self.threshold_arrive = 0.2
         else:
             self.threshold_arrive = 0.4
@@ -138,12 +140,20 @@ class Env():
                 target = SpawnModel
                 target.model_name = 'target'  # the same with sdf name
                 target.model_xml = goal_urdf
-                while True:
-                    x, y = random.uniform(-3.2, 3.2), random.uniform(-3.2, 3.2)
-                    if abs(x) > 1. or abs(y) > 1.:
-                        break
-                self.goal_position.position.x = x
-                self.goal_position.position.y = y
+                if self.is_training:
+                    while True:
+                        x, y = random.uniform(-3.2, 3.2), random.uniform(-3.2, 3.2)
+                        if abs(x) > 1. or abs(y) > 1.:
+                            break
+                    self.goal_position.position.x = x
+                    self.goal_position.position.y = y
+                else:
+                    self.test_goals_id += 1
+                    if self.test_goals_id >= len(self.test_goals):
+                        print('FINISHED!!!')
+                        exit(0)
+                    self.goal_position.position.x, self.goal_position.position.y = self.test_goals[self.test_goals_id]
+
                 self.goal(target.model_name, target.model_xml, 'namespace', self.goal_position, 'world')
             except (rospy.ServiceException) as e:
                 print("/gazebo/failed to build the target")
@@ -198,12 +208,15 @@ class Env():
             target = SpawnModel
             target.model_name = 'target'  # the same with sdf name
             target.model_xml = goal_urdf
-            while True:
-                x, y = random.uniform(-3.2, 3.2), random.uniform(-3.2, 3.2)
-                if abs(x) > 1. or abs(y) > 1.:
-                    break
-            self.goal_position.position.x = x
-            self.goal_position.position.y = y
+            if self.is_training:
+                while True:
+                    x, y = random.uniform(-3.2, 3.2), random.uniform(-3.2, 3.2)
+                    if abs(x) > 1. or abs(y) > 1.:
+                        break
+                self.goal_position.position.x = x
+                self.goal_position.position.y = y
+            else:
+                self.goal_position.position.x, self.goal_position.position.y = self.test_goals[self.test_goals_id]
 
             # if -0.3 < self.goal_position.position.x < 0.3 and -0.3 < self.goal_position.position.y < 0.3:
             #     self.goal_position.position.x += 1
