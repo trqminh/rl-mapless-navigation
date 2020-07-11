@@ -25,7 +25,6 @@ from geometry_msgs.msg import Twist, Point, Pose
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 from std_srvs.srv import Empty
-from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from respawnGoal import Respawn
 
 class Env():
@@ -62,8 +61,8 @@ class Env():
     def getOdometry(self, odom):
         self.position = odom.pose.pose.position
         orientation = odom.pose.pose.orientation
-        orientation_list = [orientation.x, orientation.y, orientation.z, orientation.w]
-        _, _, yaw = euler_from_quaternion(orientation_list)
+        q_x, q_y, q_z, q_w = orientation.x, orientation.y, orientation.z, orientation.w
+        yaw = round(math.degrees(math.atan2(2 * (q_x * q_y + q_w * q_z), 1 - 2 * (q_y * q_y + q_z * q_z))))
 
         goal_angle = math.atan2(self.goal_y - self.position.y, self.goal_x - self.position.x)
 
