@@ -31,7 +31,7 @@ def main():
         print('Training mode')
         # path things
         trained_models_path = './src/model/'
-        figures_path = './figures/bl-env2/'
+        figures_path = './figures/bl-env1/'
         Path(trained_models_path + 'actor').mkdir(parents=True, exist_ok=True)
         Path(trained_models_path + 'critic').mkdir(parents=True, exist_ok=True)
         Path(figures_path).mkdir(parents=True, exist_ok=True)

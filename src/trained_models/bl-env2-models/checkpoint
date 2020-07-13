@@ -1,0 +1,6 @@
+model_checkpoint_path: "/media/aioz-tuong/data-aioz/QuangMinh/NEW/code/mapless/src/model/criticcritic-network-520000"
+all_model_checkpoint_paths: "/media/aioz-tuong/data-aioz/QuangMinh/NEW/code/mapless/src/model/criticcritic-network-480000"
+all_model_checkpoint_paths: "/media/aioz-tuong/data-aioz/QuangMinh/NEW/code/mapless/src/model/criticcritic-network-490000"
+all_model_checkpoint_paths: "/media/aioz-tuong/data-aioz/QuangMinh/NEW/code/mapless/src/model/criticcritic-network-500000"
+all_model_checkpoint_paths: "/media/aioz-tuong/data-aioz/QuangMinh/NEW/code/mapless/src/model/criticcritic-network-510000"
+all_model_checkpoint_paths: "/media/aioz-tuong/data-aioz/QuangMinh/NEW/code/mapless/src/model/criticcritic-network-520000"
