@@ -6,22 +6,38 @@ import tensorflow as tf
 from ddpg import *
 from environment import Env
 from pathlib import Path
+import argparse
 
 exploration_decay_start_step = 50000
 state_dim = 16
 action_dim = 2
 action_linear_max = 0.25  # m/s
 action_angular_max = 0.5  # rad/s
-is_training = True
+#is_training = True
 
 def write_to_csv(item, file_name):
     with open(file_name, 'a') as f:
         f.write("%s\n" % item)
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--train', type=int, default=0, help='1 for training and 0 for testing')
+    parser.add_argument('--env', type=str, default='env1', help='env name')
+
+    args = parser.parse_args()
+    return args
+
 def main():
     rospy.init_node('ddpg_stage_1')
+
+    # get arg
+    args = parse_args()
+    is_training = bool(args.train)
+    env_name = args.env
+    trained_models_dir = './src/trained_models/bl-' + env_name + '-models/'
+
     env = Env(is_training)
-    agent = DDPG(env, state_dim, action_dim)
+    agent = DDPG(env, state_dim, action_dim, trained_models_dir)
     past_action = np.array([0., 0.])
     print('State Dimensions: ' + str(state_dim))
     print('Action Dimensions: ' + str(action_dim))
@@ -30,10 +46,9 @@ def main():
     if is_training:
         print('Training mode')
         # path things
-        trained_models_path = './src/model/'
-        figures_path = './figures/bl-env1/'
-        Path(trained_models_path + 'actor').mkdir(parents=True, exist_ok=True)
-        Path(trained_models_path + 'critic').mkdir(parents=True, exist_ok=True)
+        figures_path = './figures/bl-' + env_name + '/'
+        Path(trained_models_dir + 'actor').mkdir(parents=True, exist_ok=True)
+        Path(trained_models_dir + 'critic').mkdir(parents=True, exist_ok=True)
         Path(figures_path).mkdir(parents=True, exist_ok=True)
 
         avg_reward_his = []

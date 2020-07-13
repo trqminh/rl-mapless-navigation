@@ -2,6 +2,6 @@ __pycache__/
 *.pyc
 *.pt
 *.pth
-*.index
-*.meta
-*.data-00000-of-00001
+#*.index
+#*.meta
+#*.data-00000-of-00001

@@ -13,7 +13,7 @@ GAMMA = 0.99
 
 
 class DDPG:
-    def __init__(self, env, state_dim, action_dim):
+    def __init__(self, env, state_dim, action_dim, model_dir):
         self.name = 'DDPG'
         self.environment = env
         self.time_step = 0
@@ -21,8 +21,8 @@ class DDPG:
         self.action_dim = action_dim
         self.sess = tf.InteractiveSession()
 
-        self.actor_network = ActorNetwork(self.sess, self.state_dim, self.action_dim)
-        self.critic_network = CriticNetwork(self.sess, self.state_dim, self.action_dim)
+        self.actor_network = ActorNetwork(self.sess, self.state_dim, self.action_dim, model_dir)
+        self.critic_network = CriticNetwork(self.sess, self.state_dim, self.action_dim, model_dir)
 
         # initialize replay buffer
         self.replay_buffer = ReplayBuffer(REPLAY_BUFFER_SIZE)
