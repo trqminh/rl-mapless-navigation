@@ -18,7 +18,8 @@ diagonal_dis = math.sqrt(2) * (3.6 + 3.8)
 goal_model_dir = './goal.sdf'
 
 class Env():
-    def __init__(self, is_training):
+    def __init__(self, is_training, train_env_id):
+        self.train_env_id = train_env_id
         self.position = Pose()
         self.goal_position = Pose()
         self.goal_position.position.x = 0.
@@ -31,7 +32,7 @@ class Env():
         self.goal = rospy.ServiceProxy('/gazebo/spawn_sdf_model', SpawnModel)
         self.del_model = rospy.ServiceProxy('/gazebo/delete_model', DeleteModel)
         self.past_distance = 0.
-        self.test_goals = [(0.,3.), (3.,1.), (0.,0.), (-2.,-1.), (-0.5, -3.2)]
+        self.test_goals = [(3.,3.), (-3.,2.), (3.,-3.), (-3., -1.2)]
         self.test_goals_id = 0
         self.is_training = is_training
         if self.is_training:
@@ -141,12 +142,24 @@ class Env():
                 target.model_name = 'target'  # the same with sdf name
                 target.model_xml = goal_urdf
                 if self.is_training:
-                    while True:
-                        x, y = random.uniform(-3.2, 3.2), random.uniform(-3.2, 3.2)
-                        if abs(x) > 1. or abs(y) > 1.:
-                            break
-                    self.goal_position.position.x = x
-                    self.goal_position.position.y = y
+                    if self.train_env_id == 3:
+                        while True:
+                            x, y = random.uniform(-3.3, 3.3), random.uniform(-3.3, 3.3)
+                            if 1.5 > abs(x) > 0.5 and abs(y) < 2.5:
+                                continue
+                            elif 2.5 > abs(y) > 2. and 0. > x > 1.5:
+                                continue
+                            else:
+                                break
+                        self.goal_position.position.x = x
+                        self.goal_position.position.y = y
+                    else:
+                        while True:
+                            x, y = random.uniform(-3.2, 3.2), random.uniform(-3.2, 3.2)
+                            if abs(x) > 1. or abs(y) > 1.:
+                                break
+                        self.goal_position.position.x = x
+                        self.goal_position.position.y = y
                 else:
                     self.test_goals_id += 1
                     if self.test_goals_id >= len(self.test_goals):
@@ -209,12 +222,24 @@ class Env():
             target.model_name = 'target'  # the same with sdf name
             target.model_xml = goal_urdf
             if self.is_training:
-                while True:
-                    x, y = random.uniform(-3.2, 3.2), random.uniform(-3.2, 3.2)
-                    if abs(x) > 1. or abs(y) > 1.:
-                        break
-                self.goal_position.position.x = x
-                self.goal_position.position.y = y
+                if self.train_env_id == 3:
+                    while True:
+                        x, y = random.uniform(-3.3, 3.3), random.uniform(-3.3, 3.3)
+                        if 1.5 > abs(x) > 0.5 and abs(y) < 2.5:
+                            continue
+                        elif 2.5 > abs(y) > 2. and 0. > x > 1.5:
+                            continue
+                        else:
+                            break
+                    self.goal_position.position.x = x
+                    self.goal_position.position.y = y
+                else:
+                    while True:
+                        x, y = random.uniform(-3.2, 3.2), random.uniform(-3.2, 3.2)
+                        if abs(x) > 1. or abs(y) > 1.:
+                            break
+                    self.goal_position.position.x = x
+                    self.goal_position.position.y = y
             else:
                 self.goal_position.position.x, self.goal_position.position.y = self.test_goals[self.test_goals_id]
 

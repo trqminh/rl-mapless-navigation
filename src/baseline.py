@@ -22,7 +22,7 @@ def write_to_csv(item, file_name):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--train', type=int, default=0, help='1 for training and 0 for testing')
-    parser.add_argument('--env', type=str, default='env1', help='env name')
+    parser.add_argument('--env_id', type=int, default=2, help='env name')
 
     args = parser.parse_args()
     return args
@@ -33,10 +33,10 @@ def main():
     # get arg
     args = parse_args()
     is_training = bool(args.train)
-    env_name = args.env
+    env_name = 'env' + str(args.env_id)
     trained_models_dir = './src/trained_models/bl-' + env_name + '-models/'
 
-    env = Env(is_training)
+    env = Env(is_training, args.env_id)
     agent = DDPG(env, state_dim, action_dim, trained_models_dir)
     past_action = np.array([0., 0.])
     print('State Dimensions: ' + str(state_dim))
