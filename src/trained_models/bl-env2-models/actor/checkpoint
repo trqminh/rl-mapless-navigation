@@ -1,4 +1,4 @@
-model_checkpoint_path: "actor-network-520000"
+model_checkpoint_path: "actor-network-510000"
 all_model_checkpoint_paths: "actor-network-480000"
 all_model_checkpoint_paths: "actor-network-490000"
 all_model_checkpoint_paths: "actor-network-500000"
