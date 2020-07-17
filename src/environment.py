@@ -163,9 +163,11 @@ class Env():
                 else:
                     self.test_goals_id += 1
                     if self.test_goals_id >= len(self.test_goals):
-                        print('FINISHED!!!')
-                        exit(0)
-                    self.goal_position.position.x, self.goal_position.position.y = self.test_goals[self.test_goals_id]
+                        pass
+                        #print('FINISHED!!!')
+                        #exit(0)
+                    else:
+                        self.goal_position.position.x, self.goal_position.position.y = self.test_goals[self.test_goals_id]
 
                 self.goal(target.model_name, target.model_xml, 'namespace', self.goal_position, 'world')
             except (rospy.ServiceException) as e:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import rospy
-import gym
+#import gym
 import numpy as np
 import tensorflow as tf
 from ddpg import *

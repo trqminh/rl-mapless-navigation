@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import rospy
-import gym
+#import gym
 import numpy as np
 import tensorflow as tf
 from ddpg import *
@@ -115,6 +115,7 @@ def main():
 
     else:
         print('Testing mode')
+        total_return = 0.
         while True:
             state = env.reset()
             one_round_step = 0
@@ -124,6 +125,7 @@ def main():
                 a[0] = np.clip(a[0], 0., 1.)
                 a[1] = np.clip(a[1], -0.5, 0.5)
                 state_, r, done, arrive = env.step(a, past_action)
+                total_return += r
                 past_action = a
                 state = state_
                 one_round_step += 1
@@ -132,6 +134,9 @@ def main():
                 if arrive:
                     print('Step: %3i' % one_round_step, '| Arrive!!!')
                     one_round_step = 0
+                    if env.test_goals_id >= len(env.test_goals):
+                        print('Finished, total return: ', total_return)
+                        exit(0)
 
                 if done:
                     print('Step: %3i' % one_round_step, '| Collision!!!')

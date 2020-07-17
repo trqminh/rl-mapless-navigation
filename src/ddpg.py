@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import gym
+#import gym
 import tensorflow as tf
 import numpy as np
 from critic_network import CriticNetwork
