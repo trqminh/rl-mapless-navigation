@@ -6,7 +6,7 @@ from pathlib import Path
 
 def main():
     Path('./imgs').mkdir(parents=True, exist_ok=True)
-    for item in ['bl-env1/', 'bl-env2/']:
+    for item in ['bl-env1/', 'bl-env2/', 'mono-env2/']:
         results = []
         dir_name = './figures/' + item
         file_name = dir_name + 'mean_ep_ret_10k_his.csv'
