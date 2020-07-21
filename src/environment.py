@@ -252,7 +252,6 @@ class Env():
 
         state, rel_dis, yaw, rel_theta, diff_angle, done, arrive = self.getState(data, image)
         if self.visual_obs:
-            print(state)
             state = [i / max(state) for i in state]
         else:
             state = [i / 3.5 for i in state]

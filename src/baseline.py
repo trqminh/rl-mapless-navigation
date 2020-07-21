@@ -37,7 +37,8 @@ def main():
     args = parse_args()
     is_training = bool(args.train)
     env_name = 'env' + str(args.env_id)
-    trained_models_dir = './src/trained_models/bl-' + env_name + '-models/'
+    trained_models_dir = './src/trained_models/bl-' + env_name + '-models/' if not args.visual_obs else \
+            './src/trained_models/vis_obs-' + env_name + '-models/'
 
     env = Env(is_training, args.env_id, args.test_env_id, args.visual_obs, args.n_scan)
     agent = DDPG(env, state_dim, action_dim, trained_models_dir)
@@ -49,7 +50,9 @@ def main():
     if is_training:
         print('Training mode')
         # path things
-        figures_path = './figures/bl-' + env_name + '/'
+        figures_path = './figures/bl-' + env_name + '/' if not args.visual_obs else \
+            './figures/vis_obs-' + env_name + '/'
+
         Path(trained_models_dir + 'actor').mkdir(parents=True, exist_ok=True)
         Path(trained_models_dir + 'critic').mkdir(parents=True, exist_ok=True)
         Path(figures_path).mkdir(parents=True, exist_ok=True)
