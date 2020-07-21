@@ -109,7 +109,9 @@ class Env():
         yaw = self.yaw
         rel_theta = self.rel_theta
         diff_angle = self.diff_angle
-        min_range = 0.2
+        min_range = 0.13
+        if self.is_training:
+            min_range = 0.2
         done = False
         arrive = False
 
@@ -138,8 +140,21 @@ class Env():
         obs = None
         if self.visual_obs:
             image = PIL.Image.fromarray(image)
-            di_img = get_depth(image, encoder, depth_decoder, w, h)[0]
-            obs = di_img
+            di = get_depth(image, encoder, depth_decoder, w, h)[0] # get disparity map
+            data = di.squeeze(0).squeeze(0).cpu().numpy()
+            rescaled = (255.0 / data.max() * (data - data.min())).astype(np.uint8)
+            spec_row = rescaled[rescaled.shape[0] // 2] # choose the middle row of the map
+
+            # sample 10 value from this row as observation
+            obs, n_samp = [], 10
+            cof = len(spec_row)*1.0 / (n_samp - 1)
+            for i in range(0, n_samp):
+                n_i = math.ceil(i*cof - 1)
+                if n_i < 0:
+                    n_i = 0
+                if cof == 1:
+                    n_i = i
+                obs.append(1. / (spec_row[n_i] + 0.00001))
         else:
             obs = scan_range
 
@@ -237,6 +252,7 @@ class Env():
 
         state, rel_dis, yaw, rel_theta, diff_angle, done, arrive = self.getState(data, image)
         if self.visual_obs:
+            print(state)
             state = [i / max(state) for i in state]
         else:
             state = [i / 3.5 for i in state]
