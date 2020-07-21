@@ -25,6 +25,7 @@ def parse_args():
     parser.add_argument('--sac', type=int, default=0, help='1 for using sac')
     parser.add_argument('--visual_obs', type=int, default=0, help='1 for using image at robot observation')
     parser.add_argument('--test_env_id', type=int, default=2, help='test environment id')
+    parser.add_argument('--n_scan', type=int, default=10, help='num of scan sampled from full scan')
 
     args = parser.parse_args()
     return args
@@ -38,7 +39,7 @@ def main():
     env_name = 'env' + str(args.env_id)
     trained_models_dir = './src/trained_models/bl-' + env_name + '-models/'
 
-    env = Env(is_training, args.env_id, args.test_env_id, args.visual_obs)
+    env = Env(is_training, args.env_id, args.test_env_id, args.visual_obs, args.n_scan)
     agent = DDPG(env, state_dim, action_dim, trained_models_dir)
     past_action = np.array([0., 0.])
     print('State Dimensions: ' + str(state_dim))

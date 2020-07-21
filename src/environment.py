@@ -23,10 +23,11 @@ goal_model_dir = './goal.sdf'
 encoder, depth_decoder, w, h = get_depth_model("mono+stereo_640x192")
 
 class Env():
-    def __init__(self, is_training, train_env_id, test_env_id=2, visual_obs=False):
+    def __init__(self, is_training, train_env_id, test_env_id=2, visual_obs=False, num_scan_ranges=10):
         self.train_env_id = train_env_id
         self.test_env_id = test_env_id
         self.visual_obs = visual_obs
+        self.num_scan_ranges = num_scan_ranges
 
         self.position = Pose()
         self.goal_position = Pose()
@@ -112,13 +113,19 @@ class Env():
         done = False
         arrive = False
 
-        for i in range(len(scan.ranges)):
-            if scan.ranges[i] == float('Inf'):
+        cof = (len(scan.ranges) / (self.num_scan_ranges - 1))
+        for i in range(0, self.num_scan_ranges):
+            n_i = math.ceil(i*cof - 1)
+            if n_i < 0:
+                n_i = 0
+            if cof == 1:
+                n_i = i
+            if scan.ranges[n_i] == float('Inf'):
                 scan_range.append(3.5)
-            elif np.isnan(scan.ranges[i]):
+            elif np.isnan(scan.ranges[n_i]):
                 scan_range.append(0)
             else:
-                scan_range.append(scan.ranges[i])
+                scan_range.append(scan.ranges[n_i])
 
         if min_range > min(scan_range) > 0:
             done = True
