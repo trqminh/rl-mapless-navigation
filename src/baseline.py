@@ -13,7 +13,6 @@ state_dim = 16
 action_dim = 2
 action_linear_max = 0.25  # m/s
 action_angular_max = 0.5  # rad/s
-#is_training = True
 
 def write_to_csv(item, file_name):
     with open(file_name, 'a') as f:
@@ -23,12 +22,15 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--train', type=int, default=0, help='1 for training and 0 for testing')
     parser.add_argument('--env_id', type=int, default=2, help='env name')
+    parser.add_argument('--sac', type=int, default=0, help='1 for using sac')
+    parser.add_argument('--visual_obs', type=int, default=0, help='1 for using image at robot observation')
+    parser.add_argument('--test_env_id', type=int, default=2, help='test environment id')
 
     args = parser.parse_args()
     return args
 
 def main():
-    rospy.init_node('ddpg_stage_1')
+    rospy.init_node('baseline')
 
     # get arg
     args = parse_args()
@@ -36,7 +38,7 @@ def main():
     env_name = 'env' + str(args.env_id)
     trained_models_dir = './src/trained_models/bl-' + env_name + '-models/'
 
-    env = Env(is_training, args.env_id)
+    env = Env(is_training, args.env_id, args.test_env_id, args.visual_obs)
     agent = DDPG(env, state_dim, action_dim, trained_models_dir)
     past_action = np.array([0., 0.])
     print('State Dimensions: ' + str(state_dim))

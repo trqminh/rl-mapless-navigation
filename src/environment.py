@@ -7,33 +7,46 @@ from math import pi
 import random
 
 from geometry_msgs.msg import Twist, Point, Pose
-from sensor_msgs.msg import LaserScan
+from sensor_msgs.msg import LaserScan, Image
 from nav_msgs.msg import Odometry
 from std_srvs.srv import Empty
 from gazebo_msgs.srv import SpawnModel, DeleteModel
 
+from cv_bridge import CvBridge, CvBridgeError
+from monodepth2 import *
+import PIL
+from matplotlib import cm
+import torch
+
 diagonal_dis = math.sqrt(2) * (3.6 + 3.8)
-#goal_model_dir = os.path.join(os.path.split(os.path.realpath(__file__))[0], '..', '..', 'turtlebot3_simulations',
-#                              'turtlebot3_gazebo', 'models', 'Target', 'model.sdf')
 goal_model_dir = './goal.sdf'
+encoder, depth_decoder, w, h = get_depth_model("mono+stereo_640x192")
 
 class Env():
-    def __init__(self, is_training, train_env_id):
+    def __init__(self, is_training, train_env_id, test_env_id=2, visual_obs=False):
         self.train_env_id = train_env_id
+        self.test_env_id = test_env_id
+        self.visual_obs = visual_obs
+
         self.position = Pose()
         self.goal_position = Pose()
         self.goal_position.position.x = 0.
         self.goal_position.position.y = 0.
+
         self.pub_cmd_vel = rospy.Publisher('cmd_vel', Twist, queue_size=10)
         self.sub_odom = rospy.Subscriber('odom', Odometry, self.getOdometry)
+
         self.reset_proxy = rospy.ServiceProxy('gazebo/reset_simulation', Empty)
         self.unpause_proxy = rospy.ServiceProxy('gazebo/unpause_physics', Empty)
         self.pause_proxy = rospy.ServiceProxy('gazebo/pause_physics', Empty)
         self.goal = rospy.ServiceProxy('/gazebo/spawn_sdf_model', SpawnModel)
         self.del_model = rospy.ServiceProxy('/gazebo/delete_model', DeleteModel)
         self.past_distance = 0.
-        self.test_goals = [(3.,3.), (-3.,2.), (3.,-3.), (-3., -1.2)]
-        self.test_goals_id = 0
+
+        if self.test_env_id == 2:
+            self.test_goals = [(3.,3.), (-3.,2.), (3.,-3.), (-3., -1.2)]
+            self.test_goals_id = 0
+
         self.is_training = is_training
         if self.is_training:
             self.threshold_arrive = 0.2
@@ -90,7 +103,7 @@ class Env():
         self.yaw = yaw
         self.diff_angle = diff_angle
 
-    def getState(self, scan):
+    def getState(self, scan, image):
         scan_range = []
         yaw = self.yaw
         rel_theta = self.rel_theta
@@ -115,7 +128,15 @@ class Env():
             # done = True
             arrive = True
 
-        return scan_range, current_distance, yaw, rel_theta, diff_angle, done, arrive
+        obs = None
+        if self.visual_obs:
+            image = PIL.Image.fromarray(image)
+            di_img = get_depth(image, encoder, depth_decoder, w, h)[0]
+            obs = di_img
+        else:
+            obs = scan_range
+
+        return obs, current_distance, yaw, rel_theta, diff_angle, done, arrive
 
     def setReward(self, done, arrive):
         current_distance = math.hypot(self.goal_position.position.x - self.position.x, self.goal_position.position.y - self.position.y)
@@ -194,8 +215,24 @@ class Env():
             except:
                 pass
 
-        state, rel_dis, yaw, rel_theta, diff_angle, done, arrive = self.getState(data)
-        state = [i / 3.5 for i in state]
+        image = None
+        while self.visual_obs == True and image is None:
+            try:
+                image = rospy.wait_for_message('camera1/image_raw', Image, timeout=5)
+                bridge = CvBridge()
+                try:
+                    # self.camera_image is an ndarray with shape (h, w, c) -> (228, 304, 3)
+                    image = bridge.imgmsg_to_cv2(image, desired_encoding="passthrough")
+                except Exception as e:
+                    raise e
+            except:
+                pass
+
+        state, rel_dis, yaw, rel_theta, diff_angle, done, arrive = self.getState(data, image)
+        if self.visual_obs:
+            state = [i / max(state) for i in state]
+        else:
+            state = [i / 3.5 for i in state]
 
         for pa in past_action:
             state.append(pa)
@@ -260,9 +297,25 @@ class Env():
             except:
                 pass
 
+        image = None
+        while self.visual_obs == True and image is None:
+            try:
+                image = rospy.wait_for_message('camera1/image_raw', Image, timeout=5)
+                bridge = CvBridge()
+                try:
+                    # self.camera_image is an ndarray with shape (h, w, c) -> (228, 304, 3)
+                    image = bridge.imgmsg_to_cv2(image, desired_encoding="passthrough")
+                except Exception as e:
+                    raise e
+            except:
+                pass
+
         self.goal_distance = self.getGoalDistace()
-        state, rel_dis, yaw, rel_theta, diff_angle, done, arrive = self.getState(data)
-        state = [i / 3.5 for i in state]
+        state, rel_dis, yaw, rel_theta, diff_angle, done, arrive = self.getState(data, image)
+        if self.visual_obs:
+            state = [i / max(state) for i in state]
+        else:
+            state = [i / 3.5 for i in state]
 
         state.append(0)
         state.append(0)
