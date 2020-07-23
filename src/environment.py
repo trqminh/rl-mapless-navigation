@@ -46,8 +46,13 @@ class Env():
 
         if self.test_env_id == 2:
             self.test_goals = [(3.,3.), (-3.,2.), (3.,-3.), (-3., -1.2)]
-            self.test_goals_id = 0
+        elif self.test_env_id == 1:
+            self.test_goals = [(3.,0.), (4.,3.), (1.5,5.2), (-2., 5.5)]
+        else:
+            print('No testing goal, let set it')
+            exit(0)
 
+        self.test_goals_id = 0
         self.is_training = is_training
         if self.is_training:
             self.threshold_arrive = 0.2
