@@ -122,6 +122,7 @@ def main():
     else:
         print('Testing mode')
         total_return = 0.
+        total_step = 0
         while True:
             state = env.reset()
             one_round_step = 0
@@ -135,6 +136,7 @@ def main():
                 past_action = a
                 state = state_
                 one_round_step += 1
+                total_step += 1
 
 
                 if arrive:
@@ -142,6 +144,7 @@ def main():
                     one_round_step = 0
                     if env.test_goals_id >= len(env.test_goals):
                         print('Finished, total return: ', total_return)
+                        print('Total step: ', total_step)
                         exit(0)
 
                 if done:
