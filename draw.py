@@ -5,11 +5,10 @@ from pathlib import Path
 
 
 def main():
-    Path('./imgs').mkdir(parents=True, exist_ok=True)
-    for item in ['bl-env1/', 'bl-env2/', 'mono-env2/']:
+    for item in ['bl-env1/', 'bl-env2/', 'vis_obs-env2/']:
         results = []
         dir_name = './figures/' + item
-        file_name = dir_name + 'mean_ep_ret_10k_his.csv'
+        file_name = dir_name + 'avg_reward_his.csv'
 
         with open(file_name, 'r') as f:
             reader = csv.reader(f)
@@ -22,7 +21,7 @@ def main():
         plt.ylabel(item)
         plt.xlabel('Training time step')
         plt.legend(loc='lower right')
-        plt.savefig(dir_name + 'mean_ep_ret_10k_his.png')
+        plt.savefig(dir_name + 'avg_reward_his.png')
         plt.clf()
 
 
