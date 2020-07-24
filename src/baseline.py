@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import rospy
+from gazebo_msgs.msg import ModelStates
+import math
 #import gym
 import numpy as np
 import tensorflow as tf
@@ -123,9 +125,20 @@ def main():
         print('Testing mode')
         total_return = 0.
         total_step = 0
+        total_path_len = 0.
+        robot_name='turtlebot3_burger'
         while True:
             state = env.reset()
             one_round_step = 0
+
+            data = None
+            while data is None:
+                try:
+                    data = rospy.wait_for_message('gazebo/model_states', ModelStates, timeout=5)
+                except:
+                    pass
+
+            robot_cur_state = data.pose[data.name.index(robot_name)].position
 
             while True:
                 a = agent.action(state)
@@ -138,6 +151,20 @@ def main():
                 one_round_step += 1
                 total_step += 1
 
+                data = None
+                while data is None:
+                    try:
+                        data = rospy.wait_for_message('gazebo/model_states', ModelStates, timeout=5)
+                    except:
+                        pass
+
+                robot_next_state = data.pose[data.name.index(robot_name)].position
+                dist = math.hypot(
+                        robot_cur_state.x - robot_next_state.x,
+                        robot_cur_state.y - robot_next_state.y
+                        )
+                total_path_len += dist
+                robot_cur_state = robot_next_state
 
                 if arrive:
                     print('Step: %3i' % one_round_step, '| Arrive!!!')
@@ -145,6 +172,7 @@ def main():
                     if env.test_goals_id >= len(env.test_goals):
                         print('Finished, total return: ', total_return)
                         print('Total step: ', total_step)
+                        print('Total path length: ', total_path_len)
                         exit(0)
 
                 if done:
