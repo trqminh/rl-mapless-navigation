@@ -48,6 +48,8 @@ class Env():
             self.test_goals = [(3.,3.), (-3.,2.), (3.,-3.), (-3., -1.2)]
         elif self.test_env_id == 1:
             self.test_goals = [(2.3,-0.6), (3.5,3.), (1.5,5.2), (-2., 5.5)]
+        elif self.test_env_id == 3:
+            self.test_goals = [(5.2,-0.3), (7,3.), (3, 5), (-1.,6.), (-3., 3.), (0.,0.)]
         else:
             print('No testing goal, let set it')
             exit(0)
