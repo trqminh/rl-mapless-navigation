@@ -1,6 +1,0 @@
-model_checkpoint_path: "actor-network-140000"
-all_model_checkpoint_paths: "actor-network-100000"
-all_model_checkpoint_paths: "actor-network-110000"
-all_model_checkpoint_paths: "actor-network-120000"
-all_model_checkpoint_paths: "actor-network-130000"
-all_model_checkpoint_paths: "actor-network-140000"
