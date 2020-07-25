@@ -8,3 +8,5 @@ __pycache__/
 *.zip
 *.pth
 *.npy
+frames/
+*.avi

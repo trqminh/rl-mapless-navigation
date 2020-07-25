@@ -17,10 +17,13 @@ from monodepth2 import *
 import PIL
 from matplotlib import cm
 import torch
+from pathlib import Path
 
 diagonal_dis = math.sqrt(2) * (3.6 + 3.8)
 goal_model_dir = './goal.sdf'
 encoder, depth_decoder, w, h = get_depth_model("mono+stereo_640x192")
+# Path('frames/rgb/').mkdir(parents=True, exist_ok=True)
+# Path('frames/dis_map/').mkdir(parents=True, exist_ok=True)
 
 class Env():
     def __init__(self, is_training, train_env_id, test_env_id=2, visual_obs=False, num_scan_ranges=10):
@@ -28,6 +31,7 @@ class Env():
         self.test_env_id = test_env_id
         self.visual_obs = visual_obs
         self.num_scan_ranges = num_scan_ranges
+        self.n_step = 0
 
         self.position = Pose()
         self.goal_position = Pose()
@@ -152,6 +156,9 @@ class Env():
             di = get_depth(image, encoder, depth_decoder, w, h)[0] # get disparity map
             data = di.squeeze(0).squeeze(0).cpu().numpy()
             rescaled = (255.0 / data.max() * (data - data.min())).astype(np.uint8)
+            # im = PIL.Image.fromarray(rescaled)
+            # im.save('frames/dis_map/' + str(self.n_step) + '.png')
+            # image.save('frames/rgb/' + str(self.n_step) + '.png')
             spec_row = rescaled[rescaled.shape[0] // 2] # choose the middle row of the map
 
             # sample 10 value from this row as observation
@@ -270,6 +277,7 @@ class Env():
 
         state = state + [rel_dis / diagonal_dis, yaw / 360, rel_theta / 360, diff_angle / 180]
         reward = self.setReward(done, arrive)
+        self.n_step += 1
 
         return np.asarray(state), reward, done, arrive
 
