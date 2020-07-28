@@ -8,7 +8,7 @@ def main():
     save_path = './figures/comp_imgs/'
     Path(save_path).mkdir(parents=True, exist_ok=True)
 
-    env_id = 2
+    env_id = 1
     compare_items = ['bl-env', 'vis_obs-env']
     compare_items_name = ['Phương pháp cơ sở', 'Phương pháp đề xuất']
     figure_name = 'avg_reward_his'
