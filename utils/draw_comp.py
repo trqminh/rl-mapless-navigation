@@ -29,7 +29,7 @@ def main():
     plt.ylabel('Phần thưởng trung bình')
     plt.xlabel('Số bước huấn luyện')
     plt.legend(loc='lower right')
-    plt.savefig(save_path + 'comp_avg_reward_his.png')
+    plt.savefig(save_path + 'comp_avg_reward_his_' +str(env_id) + '.png')
     plt.clf()
 
 
