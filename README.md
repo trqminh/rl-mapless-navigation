@@ -26,12 +26,12 @@ cd ~/catkin_ws && catkin_make
 
 ## 3. More setup
 ### Adding plugin to your turtlebot3
-- Modify the .urdf.xacro file in catkin_ws/src/turtlebot3/turtlebot3_description/urdf for robot plugins (sensors, ...), my urdf is available [here](./turbot_urdf)
+- Modify the .urdf.xacro file in catkin_ws/src/turtlebot3/turtlebot3_description/urdf for robot plugins (sensors, ...), my urdf is available [here](./misc/turbot_urdf)
 ### Create the world
-- Create world by gazebo and save as .world file
-- Add .world file in git to /catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/worlds
-- Add .launch file in git to /catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/launch
-- My world and launch file are avalable [here](./worlds) and [here](./launch), in turn
+- Create worlds by gazebo and save as .world files
+- Add .world files in git to /catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/worlds
+- Add .launch files in git to /catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/launch
+- My world and launch files are avalable [here](./misc/worlds) and [here](./misc/launch), in turn
 ### Setup python
 I followed this [link](https://medium.com/@beta_b0t/how-to-setup-ros-with-python-3-44a69ca36674), for cv_bridge and other issues, and with some modifications for virtualenv, here is my setup:   
 - Install pyyaml:
@@ -90,7 +90,7 @@ roslaunch turtlebot3_gazebo train_env2.launch
 python src/baseline.py --train 1 --visual_obs 0 --env_id 2
 ```
 ### Mapping the testing world
-I followed this [link][https://newscrewdriver.com/2018/08/11/running-turtlebot3-mapping-demonstration-with-a-twist/#:~:text=Note%3A%20If%20this%20node%20failed,%2Dkinetic%2Dslam%2Dgmapping%20.] for mapping a gazebo world. Launch a test world and run this:
+I followed this [link](https://newscrewdriver.com/2018/08/11/running-turtlebot3-mapping-demonstration-with-a-twist/#:~:text=Note%3A%20If%20this%20node%20failed,%2Dkinetic%2Dslam%2Dgmapping%20.) for mapping a gazebo world. Launch a test world and run this:
 ```
 roslaunch turtlebot3_slam turtlebot3_slam.launch slam_methods:=gmapping
 ```
@@ -119,4 +119,12 @@ python utils/path.py
 ```
 python src/baseline.py --train 0 --visual_obs 0 --env_id 2 --test_env_id 1
 ```
-
+## 5. Utilities
+- Plot training results
+```
+python utils/draw.py
+```
+- Make video from mono vision frames
+```
+python utils/make_video.py
+```
