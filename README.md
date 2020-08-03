@@ -90,15 +90,15 @@ roslaunch turtlebot3_gazebo train_env2.launch
 python src/baseline.py --train 1 --visual_obs 0 --env_id 2
 ```
 ### Mapping the testing world
-I followed this [link](https://newscrewdriver.com/2018/08/11/running-turtlebot3-mapping-demonstration-with-a-twist/#:~:text=Note%3A%20If%20this%20node%20failed,%2Dkinetic%2Dslam%2Dgmapping%20.) for mapping a gazebo world. Launch a test world and run this:
+- I followed this [link](https://newscrewdriver.com/2018/08/11/running-turtlebot3-mapping-demonstration-with-a-twist/#:~:text=Note%3A%20If%20this%20node%20failed,%2Dkinetic%2Dslam%2Dgmapping%20.) for mapping a gazebo world. Launch a test world and run this:
 ```
 roslaunch turtlebot3_slam turtlebot3_slam.launch slam_methods:=gmapping
 ```
-then run this and start mapping
+- then run this and start mapping
 ```
 roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 ```
-Eventually, save the map for visualizing path in need
+- Eventually, save the map for visualizing path in need
 ```
 rosrun map_server map_saver -f ~/map
 ```
