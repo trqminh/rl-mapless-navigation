@@ -48,14 +48,16 @@ class Env():
         self.del_model = rospy.ServiceProxy('/gazebo/delete_model', DeleteModel)
         self.past_distance = 0.
 
-        if self.test_env_id == 2:
+        if self.test_env_id == 4:
             self.test_goals = [(3.,3.), (-3.,2.), (3.,-3.), (-3., -1.2)]
         elif self.test_env_id == 1:
             # self.test_goals = [(2.3,-0.6), (3.5,3.), (1.5,5.2), (-2., 5.5)]
             self.test_goals = [(5.2,1), (5,3.), (1.5,5.2),(-2., 4.5)]
-        elif self.test_env_id == 3:
+        elif self.test_env_id == 2:
             #self.test_goals = [(5.2,-0.3), (7,3.), (3, 5), (-1.,6.), (-3., 3.), (0.,0.)]
             self.test_goals = [(5.2,2), (5.2, 4), (3, 5), (-1.,5.), (-3., 3.), (0.,0.)]
+        elif self.test_env_id == 3:
+            self.test_goals = [(0.5,2)]
         else:
             print('No testing goal, let set it')
             exit(0)
