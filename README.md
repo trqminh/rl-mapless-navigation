@@ -31,14 +31,14 @@ cd ~/catkin_ws && catkin_make
 - Create worlds by gazebo and save as .world files
 - Add .world files in git to /catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/worlds
 - Add .launch files in git to /catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/launch
-- My world and launch files are avalable [here](./misc/worlds) and [here](./misc/launch), in turn
+- My world and launch files are avalable [here](./misc/worlds) and [here](./misc/launch), in turn   
 Using my setups by running:
 ```
 sh misc/transfer.sh
 ```
 ## 3. Server setups
 ### 3.1. Python for ROS
-I followed this [link](https://medium.com/@beta_b0t/how-to-setup-ros-with-python-3-44a69ca36674), for cv_bridge and other issues, and with some modifications for virtualenv, here is my setup:   
+I followed this [link](https://medium.com/@beta_b0t/how-to-setup-ros-with-python-3-44a69ca36674), for cv_bridge and other issues, and with some modifications for virtualenv:   
 - Install pyyaml:
 ```
 sudo apt-get install python3-pip python3-yaml
@@ -89,7 +89,7 @@ pip install torch==0.4.1 torchvision==0.2.1
 - Follow the first answer of this [link](https://answers.ros.org/question/272065/specification-of-ros_master_uri-and-ros_hostname/)
 - Test the connection by rostopic echo to subscribe to some public topic in client
 ## 4. Training and evaluation
-### In client's terminal
+### 4.1. In client's terminal
 ```
 source ~/catkin_ws/devel/setup.bash
 ```
@@ -101,11 +101,11 @@ roslaunch turtlebot3_gazebo train_env2.launch
 ```
 roslaunch turtlebot3_gazebo test_env2.launch
 ```
-### In server's terminal
+### 4.2. In server's terminal
 ```
-source install/setup.bash --extend
+source ~/catkin_build_ws/install/setup.bash --extend
 ```
-- then:
+then:
 ```
 python src/baseline.py
 ```
@@ -113,7 +113,7 @@ python src/baseline.py
 --visual_obs 1 for using camera, 0 for using laser scan   
 --env_id is training environment id   
 --test_env_id is testing environment id   
-- For examples:
+- For examples:   
 Training in the training environment id 2 with camera
 ```
 python src/baseline.py --visual_obs 1 --training 1 --env_id 2
