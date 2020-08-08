@@ -3,7 +3,7 @@
   <arg name="x_pos" default="0.0"/>
   <arg name="y_pos" default="0.0"/>
   <arg name="z_pos" default="0.0"/>
-  <arg name="map_file" default="/home/aioz-minh/map_test_env1/map.yaml"/>
+  <arg name="map_file" default="$(env HOME)/map_test_env1/map.yaml"/>
 
   <!-- Map server -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
