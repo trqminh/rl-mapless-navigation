@@ -57,7 +57,10 @@ class Env():
             #self.test_goals = [(5.2,-0.3), (7,3.), (3, 5), (-1.,6.), (-3., 3.), (0.,0.)]
             self.test_goals = [(5.2,2), (5.2, 4), (3, 5), (-1.,5.), (-3., 3.), (0.,0.)]
         elif self.test_env_id == 3:
-            self.test_goals = [(0.5,2)]
+            self.test_goals = []
+            for i in range(50):
+                x, y = random.uniform(-2.4, 2.4), random.uniform(-2.4, 2.4)
+                self.test_goals.append((x,y))
         else:
             print('No testing goal, let set it')
             exit(0)
@@ -188,6 +191,8 @@ class Env():
         if done:
             reward = -100.
             self.pub_cmd_vel.publish(Twist())
+            if not self.is_training and self.test_goals_id < len(self.test_goals):
+                self.test_goals_id += 1
 
         if arrive:
             reward = 120.

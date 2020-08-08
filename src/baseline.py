@@ -126,6 +126,7 @@ def main():
         total_return = 0.
         total_step = 0
         total_path_len = 0.
+        arrive_cnt = 0
         robot_name='turtlebot3_burger'
         while True:
             state = env.reset()
@@ -167,16 +168,24 @@ def main():
                 robot_cur_state = robot_next_state
 
                 if arrive:
+                    arrive_cnt += 1
                     print('Step: %3i' % one_round_step, '| Arrive!!!')
                     one_round_step = 0
                     if env.test_goals_id >= len(env.test_goals):
                         print('Finished, total return: ', total_return)
                         print('Total step: ', total_step)
                         print('Total path length: ', total_path_len)
+                        print('Success rate: ', arrive_cnt / len(env.test_goals))
                         exit(0)
 
                 if done:
                     print('Step: %3i' % one_round_step, '| Collision!!!')
+                    if env.test_goals_id >= len(env.test_goals):
+                        print('Finished, total return: ', total_return)
+                        print('Total step: ', total_step)
+                        print('Total path length: ', total_path_len)
+                        print('Success rate: ', arrive_cnt / len(env.test_goals))
+                        exit(0)
                     break
 
 
