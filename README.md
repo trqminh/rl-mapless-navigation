@@ -32,6 +32,7 @@ cd ~/catkin_ws && catkin_make
 - Add .world files in git to /catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/worlds
 - Add .launch files in git to /catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/launch
 - My world and launch files are avalable [here](./misc/worlds) and [here](./misc/launch), in turn   
+
 Using my setups by running:
 ```
 sh misc/transfer.sh
@@ -114,6 +115,7 @@ python src/baseline.py
 --env_id is training environment id   
 --test_env_id is testing environment id   
 - For examples:   
+
 Training in the training environment id 2 with camera
 ```
 python src/baseline.py --visual_obs 1 --training 1 --env_id 2
