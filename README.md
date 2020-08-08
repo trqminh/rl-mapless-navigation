@@ -1,6 +1,6 @@
 # rl-mapless-navigation
 
-## 1. Basic setup
+## 1. Software setups
 - Install ROS Melodic (for Ubuntu 18.04)
 - Install Gazebo9
 - Install [gazebo_ros package](http://gazebosim.org/tutorials?tut=ros_installing&cat=connect_ros)
