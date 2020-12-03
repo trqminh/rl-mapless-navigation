@@ -20,7 +20,7 @@ import torch
 from pathlib import Path
 
 diagonal_dis = math.sqrt(2) * (3.6 + 3.8)
-goal_model_dir = './goal.sdf'
+goal_model_dir = './misc/gazebo_models/goal.sdf'
 encoder, depth_decoder, w, h = get_depth_model("mono+stereo_640x192")
 # Path('frames/rgb/').mkdir(parents=True, exist_ok=True)
 # Path('frames/dis_map/').mkdir(parents=True, exist_ok=True)
