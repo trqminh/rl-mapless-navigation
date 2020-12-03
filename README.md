@@ -7,7 +7,7 @@ The pdf version of this work can be found [here](https://www.dropbox.com/s/t2oz0
 <img src="/misc/demo.gif" class="fit image">   
 
 ## Installation
-This repo also contains the trained models of the baseline and ours. It is also daunting to reproduce the result, the reason could be briefly explained by this [article](https://www.alexirpan.com/2018/02/14/rl-hard.html). See the [installation][./INSTALL.md] for more information.
+This repo also contains the trained models of the baseline and ours. It is also daunting to reproduce the result, the reason could be briefly explained by this [article](https://www.alexirpan.com/2018/02/14/rl-hard.html). See the [installation](./INSTALL.md) for more information.
 
 ## Acknowledgement
 - [MotionPlannerUsingDDPG](https://github.com/m5823779/MotionPlannerUsingDDPG)
