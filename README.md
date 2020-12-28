@@ -3,7 +3,7 @@
 ## Abstract
 This work attempts to construct pseudo laser findings based on direct depth matrix prediction from a single camera image while still retaining the stable performance of the robot navigation task. The depth prediction phase is inherited from [monodepth2](https://github.com/nianticlabs/monodepth2) pre-trained on the KITTI dataset.   
 
-The paper can be found [here]().   
+ paper can be found [here](https://www.researchgate.net/publication/347535289_Mobile_Robot_Planner_with_Low-cost_Cameras_Using_Deep_Reinforcement_Learning).   
 
 ## Demo
 <img src="/misc/demo.gif" class="fit image">   
